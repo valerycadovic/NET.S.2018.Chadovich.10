@@ -17,7 +17,7 @@
 
         private int tail;
 
-        public T[] innerArray;
+        private T[] innerArray;
 
         private int capacity;
         #endregion
