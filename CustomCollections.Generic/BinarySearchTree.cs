@@ -44,6 +44,11 @@
             version++;
         }
 
+        public bool Contains(T item)
+        {
+            return this.Contains(this.Root, item);
+        }
+
         public IEnumerable<T> PreOrder()
         {
             IEnumerable<T> Go(Node<T> node)
@@ -188,6 +193,29 @@
             }
 
             return node;
+        }
+
+        private bool Contains(Node<T> node, T value)
+        {
+            if (node == null)
+            {
+                return false;
+            }
+
+            int comparisonResult = this.comparison(node.Value, value);
+            
+            if (comparisonResult > 0)
+            {
+                return Contains(node.Left, value);
+            }
+            else if (comparisonResult < 0)
+            {
+                return Contains(node.Right, value);
+            }
+            else
+            {
+                return true;
+            }
         }
         #endregion
 
