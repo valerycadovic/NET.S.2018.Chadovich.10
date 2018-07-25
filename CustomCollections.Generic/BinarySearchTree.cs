@@ -9,7 +9,7 @@
         #region private fields
         private int version;
 
-        private Comparison<T> comparison;
+        private readonly Comparison<T> comparison;
         #endregion
 
         #region ctors
