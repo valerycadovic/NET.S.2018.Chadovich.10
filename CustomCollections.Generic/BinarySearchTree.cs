@@ -10,6 +10,8 @@
         private int version;
 
         private readonly Comparison<T> comparison;
+
+        private Node<T> root;
         #endregion
 
         #region ctors
@@ -27,11 +29,7 @@
             this.comparison = comparison ?? Comparer<T>.Default.Compare;
         }
         #endregion
-
-        #region properties
-        public Node<T> Root { get; private set; }
-        #endregion
-
+        
         #region public api
         public void Add(T item)
         {
@@ -40,13 +38,13 @@
                 throw new ArgumentNullException($"{nameof(item)} is null");
             }
 
-            this.Root = AddRec(this.Root, item);
+            this.root = AddRec(this.root, item);
             version++;
         }
 
         public bool Contains(T item)
         {
-            return this.Contains(this.Root, item);
+            return this.Contains(this.root, item);
         }
 
         public IEnumerable<T> PreOrder()
@@ -83,7 +81,7 @@
                 }
             }
 
-            return Go(Root);
+            return Go(root);
 
         }
 
@@ -121,7 +119,7 @@
                 }
             }
 
-            return Go(Root);
+            return Go(root);
         }
 
         public IEnumerable<T> PostOrder()
@@ -159,7 +157,7 @@
                 }
             }
 
-            return Go(Root);
+            return Go(root);
         }
 
         public IEnumerator<T> GetEnumerator()
@@ -221,7 +219,7 @@
 
         #region inner classes
 #pragma warning disable 693
-        public sealed class Node<T>
+        private sealed class Node<T>
 #pragma warning restore 693
         {
             public Node(T value)

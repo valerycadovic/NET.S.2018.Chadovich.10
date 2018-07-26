@@ -38,6 +38,7 @@
             this.Count = list.Count;
             this.head = 0;
             this.tail = this.Count;
+            this.capacity = this.Count;
         }
 
         public Queue(int capacity = DefaultCapacity)
@@ -62,7 +63,7 @@
         {
             if (this.Count == this.capacity)
             {
-                T[] buffer = new T[this.capacity * 2];
+                T[] buffer = new T[this.capacity != 0 ? this.capacity * 2 : 1];
 
                 for (int i = 0; i < this.Count; i++)
                 {
@@ -124,6 +125,11 @@
         {
             ValidateOnNull(array, nameof(array));
 
+            if (this.Count == 0)
+            {
+                return;
+            }
+
             if (arrayIndex < 0 || arrayIndex >= this.Count)
             {
                 throw new ArgumentOutOfRangeException($"{nameof(arrayIndex)} is out of range");
@@ -163,7 +169,7 @@
                 throw new InvalidOperationException("You can't peek from empty queue!");
             }
 
-            return this[this.Count - 1];
+            return this[0];
         }
 
         public T[] ToArray()
@@ -198,9 +204,9 @@
         {
             return new Queue<T>.Enumerator(this);
         }
-
         IEnumerator<T> IEnumerable<T>.GetEnumerator()
             => this.GetEnumerator();
+
 
         IEnumerator IEnumerable.GetEnumerator()
             => this.GetEnumerator();
