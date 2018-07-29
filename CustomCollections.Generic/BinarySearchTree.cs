@@ -1,4 +1,6 @@
-﻿namespace CustomCollections.Generic
+﻿using System.Linq;
+
+namespace CustomCollections.Generic
 {
     using System;
     using System.Collections;
@@ -24,22 +26,29 @@
         {
         }
 
-        public BinarySearchTree(Comparison<T> compaison)
+        public BinarySearchTree(Comparison<T> comparison)
         {
+            if (!typeof(T).GetInterfaces().Contains(typeof(IComparable<T>)))
+            {
+                throw new ArgumentException($"{nameof(T)} must implement {nameof(IComparable<T>)}");
+            }
+
             this.comparison = comparison ?? Comparer<T>.Default.Compare;
         }
         #endregion
-        
+
         #region public api
+        public int Count { get; private set; }
+
         public void Add(T item)
         {
+            version++;
             if (item == null)
             {
                 throw new ArgumentNullException($"{nameof(item)} is null");
             }
 
             this.root = AddRec(this.root, item);
-            version++;
         }
 
         public bool Contains(T item)
@@ -176,6 +185,7 @@
         {
             if (node == null)
             {
+                Count++;
                 return new Node<T>(value);
             }
 
@@ -201,19 +211,20 @@
             }
 
             int comparisonResult = this.comparison(node.Value, value);
-            
+
             if (comparisonResult > 0)
             {
                 return Contains(node.Left, value);
             }
-            else if (comparisonResult < 0)
+            if (comparisonResult < 0)
             {
                 return Contains(node.Right, value);
             }
-            else
+            if (EqualityComparer<T>.Default.Equals(node.Value, value))
             {
                 return true;
             }
+            return false;
         }
         #endregion
 
